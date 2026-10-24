@@ -3,6 +3,7 @@
 services:
   frontend:
     build: ./frontend
+    container_name: frontend
     ports:
       - "8080:80"
     depends_on:
@@ -10,6 +11,7 @@ services:
 
   backend:
     build: ./backend
+    container_name: backend
     environment:
       DB_HOST: db
       DB_NAME: ${DB_NAME}
@@ -21,6 +23,7 @@ services:
 
   db:
     image: postgres:17-alpine
+    container_name: database
     environment:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
