@@ -16,9 +16,9 @@ def status():
             password=os.environ["DB_PASSWORD"]
         ) as conn:
             conn.execute("SELECT 1")
-        return jsonify({"message": "Backend i baza danych działają!"})
+        return jsonify({"message_backend": "Backend działa!", "message_db": "Połączenie z bazą danych działa!"}), 200
     except psycopg.Error:
-        return jsonify({"message": "Brak połączenia z bazą danych"}), 503
+        return jsonify({"message_backend": "Backend działa!", "message_db": "Brak połączenia z bazą danych"}), 503
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
