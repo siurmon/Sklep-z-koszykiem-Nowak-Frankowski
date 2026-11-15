@@ -1,40 +1,52 @@
 #opracowane przy pomocy AI
 
+name: sklep-z-koszykiem-php
+
 services:
   frontend:
     build: ./frontend
     container_name: frontend
     ports:
-      - "8080:80"
+      - "${FRONTEND_PORT:-8080}:80"
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
 
   backend:
     build: ./backend
     container_name: backend
     environment:
       DB_HOST: db
-      DB_NAME: ${DB_NAME}
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
+      DB_PORT: ${DB_PORT:-5432}
+      DB_NAME: ${DB_NAME:-sklep}
+      DB_USER: ${DB_USER:-sklep}
+      DB_PASSWORD: ${DB_PASSWORD:-sklep123}
     depends_on:
       db:
-        condition: service_healthy
+        condition: service_started
+    healthcheck:
+      # Sprawdza TYLKO backend PHP (bez bazy danych)
+      test: ["CMD", "php", "-r", "exit(@file_get_contents('http://127.0.0.1:8000/health') === false);"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
 
   db:
     image: postgres:17-alpine
     container_name: database
     environment:
-      POSTGRES_DB: ${DB_NAME}
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME:-sklep}
+      POSTGRES_USER: ${DB_USER:-sklep}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-sklep123}
     volumes:
       - dane_bazy:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB" ]
+      test: ["CMD-SHELL", "PGPASSWORD=$$POSTGRES_PASSWORD psql -h 127.0.0.1 -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\" -tAc 'SELECT 1' >/dev/null"]
       interval: 3s
       timeout: 5s
-      retries: 10
+      retries: 5
 
 volumes:
   dane_bazy:

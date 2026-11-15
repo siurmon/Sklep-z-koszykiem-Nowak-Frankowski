@@ -1,13 +1,11 @@
-FROM python:3.12-slim
+FROM php:8.3-cli
+
+RUN apt-get update && apt-get install -y --no-install-recommends libpq-dev \
+    && docker-php-ext-install pdo_pgsql \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
+COPY . .
 
-COPY requirements.txt .
-
-RUN pip install --no-cache-dir -r requirements.txt
-
-COPY app.py .
-
-EXPOSE 5000
-
-CMD ["python", "app.py"]
+EXPOSE 8000
+CMD ["php", "-S", "0.0.0.0:8000", "index.php"]
