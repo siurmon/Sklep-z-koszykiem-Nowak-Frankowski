@@ -1,21 +1,49 @@
 <!DOCTYPE html>
 <html lang="pl">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sklep</title>
-    <script src="./scripts.js"></script>
+    <title>Sklep z koszykiem</title>
     <link rel="stylesheet" href="style.css">
+    <script src="scripts.js" defer></script>
 </head>
-
 <body>
+    <header>
+        <h1>Sklep internetowy</h1>
+    </header>
 
-    <h1>Sklep internetowy</h1>
-    <p id="wynik_backend">Ładowanie Backend'u...</p>
-    <p id="wynik_db">Ładowanie Bazy Danych...</p>
+    <section class="panel">
+        <div class="naglowek">
+            <h2>Status aplikacji</h2>
+            <button type="button" class="drugorzedny" id="odswiez">Odśwież status</button>
+        </div>
+        <div class="statusy">
+            <p id="wynik_backend" class="status">Sprawdzanie backendu...</p>
+            <p id="wynik_db" class="status">Sprawdzanie bazy danych...</p>
+        </div>
+        <p id="czas_statusu" class="czas_statusu" role="status"></p>
+    </section>
 
+    <main>
+        <section class="panel">
+            <h2>Produkty</h2>
+            <div id="produkty" aria-live="polite">Ładowanie...</div>
 
+            <h3>Dodaj produkt</h3>
+            <form id="formularz">
+                <input id="nazwa" placeholder="Nazwa produktu" required maxlength="100">
+                <input id="cena" type="number" placeholder="Cena w zł" min="0" step="0.01" required>
+                <button type="submit">Dodaj</button>
+            </form>
+        </section>
+
+        <section class="panel">
+            <h2>Koszyk</h2>
+            <div id="koszyk" aria-live="polite">Ładowanie...</div>
+            <p class="razem">Razem: <span id="razem">0.00</span> zł</p>
+        </section>
+    </main>
+
+    <p id="komunikat" role="status"></p>
 </body>
-
 </html>
