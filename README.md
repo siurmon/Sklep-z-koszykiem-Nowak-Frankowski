@@ -1,5 +1,7 @@
 # Sklep-z-koszykiem-Nowak-Frankowski
 
+UZUPEŁNIĆ: FORMAT WYMIANY DANYCH JSON, JAK WYGLADAJĄ TABELE I JAK JE PRZEKAZUJEMY
+
 ## 1. Uruchomienie
 
 W folderze z `compose.yaml`:
